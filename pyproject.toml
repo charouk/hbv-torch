@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "hbv-torch"
+version = "0.1.0"
+description = "A differentiable HBV hydrological model in PyTorch"
+readme = "README.md"
+authors = [{ name = "Ichrak Boubakri", email = "ichrak.enstab@gmail.com" }]
+license = { text = "MIT" }
+requires-python = ">=3.9"
+dependencies = ["torch>=2.0", "numpy", "pandas", "matplotlib"]
+
+[project.optional-dependencies]
+dev = ["pytest", "jupyter"]
+
+[tool.setuptools]
+packages = ["hbv_torch"]

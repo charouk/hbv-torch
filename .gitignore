@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+*.egg-info/
+.ipynb_checkpoints/
+data/
+# keep results/ committed so the README figure shows; ignore large CSVs
+results/**/simulation.csv
