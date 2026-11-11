@@ -73,9 +73,29 @@ Calibration on water years 2000–2008 (after a one-year warm-up), validation on
 | 01022500 (Maine) | Calibration | 0.81 | 0.85 | 0.3% | — |
 | 01022500 (Maine) | Validation | **0.80** | **0.78** | 1.5% | 6 × 10⁻¹² mm over 16 years |
 
-<img width="1650" height="600" alt="hydrograph" src="https://github.com/user-attachments/assets/b018061c-beb6-444c-8689-58cd1d1f1f45" />
+![hydrograph](results/01022500/hydrograph.png)
 
 Validation performance is close to calibration performance, so the gradient-based calibration generalises to unseen years. The model tends to underestimate the largest flood peaks and slightly overestimate summer low flows, two known limits of HBV's lumped soil and groundwater structure with daily forcing. Next steps are a multi-basin batch run and differentiable parameter learning (see Roadmap).
+
+## Comparison with an LSTM
+
+How does a conceptual model with 15 interpretable parameters compare with a data-driven LSTM on the same basin? The LSTM sees the past 365 days of forcing (precipitation, temperature, PET), **never past discharge**, so both models solve the same simulation problem. It trains on 2000–2006, uses 2007–2008 for early stopping (inside the HBV calibration period), and both models are scored on the same test period, 2009–2014. The LSTM result is the mean of 3 seeds.
+
+```bash
+python -m hbv_torch.calibrate    --camels-root path/to/CAMELS --basin 01022500
+python -m hbv_torch.lstm_baseline --camels-root path/to/CAMELS --basin 01022500
+```
+
+<!-- Fill in from results/01022500/comparison.json -->
+
+| Test 2009–2014 | NSE | KGE | PBIAS | Peak-flow bias (top 2%) | Low-flow bias (bottom 30%) | Water balance closed? |
+|---|---|---|---|---|---|---|
+| Differentiable HBV | | | | | | yes (10⁻¹¹ mm) |
+| LSTM (3 seeds) | | | | | | no constraint |
+
+![comparison](results/01022500/comparison.png)
+
+<!-- Interpretation: 3–4 sentences. Which model wins on NSE? On peaks? On low flows? What does HBV offer that the LSTM cannot (states, mass balance, interpretable parameters)? -->
 
 ## Tests
 
@@ -90,7 +110,8 @@ Validation performance is close to calibration performance, so the gradient-base
 
 - [ ] Calibrate the 671 CAMELS basins in one batch and map parameters against catchment attributes
 - [ ] Differentiable parameter learning: a neural network predicting HBV parameters from attributes
-- [ ] Comparison with an LSTM baseline (see [hydro-ai-foundations](https://github.com/charouk/hydro-ai-foundations))
+- [x] Comparison with a single-basin LSTM baseline (see above)
+- [ ] Multi-basin LSTM vs. HBV across CAMELS (see [hydro-ai-foundations](https://github.com/charouk/hydro-ai-foundations))
 - [ ] Uncertainty: ensembles of calibrated parameter sets
 
 ## References

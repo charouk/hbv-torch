@@ -26,10 +26,18 @@ def hargreaves_pet(tmin: np.ndarray, tmax: np.ndarray, doy: np.ndarray, lat_deg:
     return np.clip(pet, 0, None)
 
 
-def _find(root: Path, pattern: str) -> Path:
+def _find(root: Path, pattern: str, prefer: str | None = None) -> Path:
+    """Search ``root`` recursively, so any folder above the CAMELS data works."""
+    if not root.exists():
+        raise FileNotFoundError(f"The folder {root} does not exist. Check the --camels-root path.")
     hits = sorted(root.rglob(pattern))
+    if prefer:
+        preferred = [h for h in hits if prefer in h.parts]
+        hits = preferred or hits
     if not hits:
-        raise FileNotFoundError(f"No file matching {pattern!r} under {root}")
+        raise FileNotFoundError(
+            f"No file matching {pattern!r} anywhere under {root}. "
+            "Is the CAMELS zip fully extracted there?")
     return hits[0]
 
 
@@ -44,8 +52,8 @@ def load_camels_basin(camels_root: str | Path, basin: str, forcing: str = "dayme
     Attributes ``lat`` and ``area_km2`` are stored in ``df.attrs``.
     """
     root = Path(camels_root)
-    f_forc = _find(root / "basin_mean_forcing" / forcing, f"{basin}_lump_*forcing*.txt")
-    f_q = _find(root / "usgs_streamflow", f"{basin}_streamflow_qc.txt")
+    f_forc = _find(root, f"{basin}_lump_*forcing*.txt", prefer=forcing)
+    f_q = _find(root, f"{basin}_streamflow_qc.txt")
 
     with open(f_forc) as fh:
         lat = float(fh.readline())
