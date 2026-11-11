@@ -73,7 +73,7 @@ Calibration on water years 2000–2008 (after a one-year warm-up), validation on
 | 01022500 (Maine) | Calibration | 0.81 | 0.85 | 0.3% | — |
 | 01022500 (Maine) | Validation | **0.80** | **0.78** | 1.5% | 6 × 10⁻¹² mm over 16 years |
 
-![hydrograph](results/01022500/hydrograph.png)
+<img width="1650" height="600" alt="hydrograph" src="https://github.com/user-attachments/assets/b018061c-beb6-444c-8689-58cd1d1f1f45" />
 
 Validation performance is close to calibration performance, so the gradient-based calibration generalises to unseen years. The model tends to underestimate the largest flood peaks and slightly overestimate summer low flows, two known limits of HBV's lumped soil and groundwater structure with daily forcing. Next steps are a multi-basin batch run and differentiable parameter learning (see Roadmap).
 
