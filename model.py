@@ -1,18 +1,8 @@
 """Differentiable HBV-96 hydrological model in PyTorch.
 
-The model follows the classic HBV structure (Bergström, 1976; Lindström et al., 1997;
-Seibert & Vis, 2012): a degree-day snow routine, a soil-moisture routine, a two-box
-response routine and a triangular routing function.
-
-Every operation is written in PyTorch, so gradients of any loss (e.g. 1 - NSE) flow
-back to the 15 parameters. The model runs on a batch of basins at once, which makes
-it suitable for large-sample (CAMELS / Caravan) calibration.
-
 Mass balance is tracked explicitly: over any simulation,
 
     sum(P_eff) = sum(ET) + sum(Q_generated) + delta(storages)
-
-holds to floating-point precision (see ``HBVOutput.water_balance_residual``).
 """
 from __future__ import annotations
 
