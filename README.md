@@ -86,16 +86,16 @@ python -m hbv_torch.calibrate    --camels-root path/to/CAMELS --basin 01022500
 python -m hbv_torch.lstm_baseline --camels-root path/to/CAMELS --basin 01022500
 ```
 
-<!-- Fill in from results/01022500/comparison.json -->
-
 | Test 2009–2014 | NSE | KGE | PBIAS | Peak-flow bias (top 2%) | Low-flow bias (bottom 30%) | Water balance closed? |
 |---|---|---|---|---|---|---|
-| Differentiable HBV | | | | | | yes (10⁻¹¹ mm) |
-| LSTM (3 seeds) | | | | | | no constraint |
+| Differentiable HBV | **0.80** | **0.78** | 1.5% | −30% | +59% | yes (10⁻¹¹ mm) |
+| LSTM (3 seeds) | 0.72 (0.70–0.74) | 0.71 | 14.1% | −37% | −6% | no constraint |
 
-![comparison](results/01022500/comparison.png)
+PBIAS > 0 means the model underestimates total volume; peak- and low-flow biases are simulated minus observed volume.
 
-<!-- Interpretation: 3–4 sentences. Which model wins on NSE? On peaks? On low flows? What does HBV offer that the LSTM cannot (states, mass balance, interpretable parameters)? -->
+<img width="1650" height="975" alt="comparison" src="https://github.com/user-attachments/assets/0503b56e-66b1-410e-9c8f-81edd4910edf" />
+
+On this single basin with 7–9 years of training data, the differentiable HBV outperforms the LSTM (NSE 0.80 vs 0.72, above the best LSTM seed) and closes the water balance, while the unconstrained LSTM underestimates total volume by 14%. Both models underestimate the largest floods. The LSTM, however, reproduces low flows far better (−6% vs +59%): HBV's lower groundwater store drains too slowly in dry summers. Each model fails where the other succeeds, which motivates hybrid models that keep HBV's mass-conserving structure while learning the processes it represents poorly, such as baseflow. LSTMs trained on hundreds of basins are known to outperform single-basin models (Kratzert et al., 2019), so this comparison reflects a data-limited, single-basin setting.
 
 ## Tests
 
